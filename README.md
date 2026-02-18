@@ -1,24 +1,20 @@
-📝 Mini Task Tracker API
-A production-style backend for a Task Tracker application built with Node.js, TypeScript, Express, MongoDB, and Redis.
-This project demonstrates secure authentication, per-user task management, Redis caching, automated testing, and a fully containerized development environment using Docker Compose.
-🚀 Features
-🔐 JWT-based authentication (Signup & Login)
-👤 User & Task models with Mongoose
-✅ Task CRUD (Create, Read, Update, Delete)
-🧠 Per-user Redis caching for task listing
-♻️ Cache invalidation on task updates
-🧪 Unit & integration testing with Jest
-📊 ~75% test coverage
-🐳 Dockerized setup (API + MongoDB + Redis)
-📦 Environment-based configuration
-🏗 Tech Stack
-Backend: Node.js, Express, TypeScript
-Database: MongoDB + Mongoose
-Caching: Redis
-Authentication: JWT + bcrypt
-Testing: Jest, Supertest, mongodb-memory-server
-Containerization: Docker, Docker Compose
-📂 Project Structure
+# mini-task-tracker-api
+
+A backend for a personal task tracker, built to get hands-on with a production-style stack. It's not trying to be a massive project — the goal was to wire together auth, a real database, caching, and tests in a way that actually makes sense together.
+
+
+
+## What's in here
+
+JWT auth (signup + login), full task CRUD, Redis caching per user, and a Dockerized setup so you don't have to install Mongo and Redis locally if you don't want to. Tests use an in-memory MongoDB instance so nothing real gets touched.
+
+**Stack:** Node.js · TypeScript · Express · MongoDB (Mongoose) · Redis · Jest + Supertest · Docker
+
+---
+
+## Project layout
+
+```
 src/
  ┣ config/
  ┣ controllers/
@@ -29,81 +25,96 @@ src/
  ┣ __tests__/
  ┣ app.ts
  ┗ server.ts
-⚙️ Environment Variables
-Create a .env file in the root:
-PORT=5001
-MONGO_URI=mongodb://mongo:27017/tasks
-REDIS_URL=redis://redis:6379
-JWT_SECRET=your_jwt_secret
-💻 Run Locally (Development Mode)
-Make sure MongoDB and Redis are running locally.
+```
+
+---
+
+## Getting started
+
+**Option 1 — Docker (easiest)**
+
+```bash
+docker compose up --build
+```
+
+Spins up the API, MongoDB, and Redis together. API runs at `http://localhost:5001`.
+
+```bash
+docker compose down   # to stop
+```
+
+**Option 2 — Local dev**
+
+Make sure you have MongoDB and Redis running, then:
+
+```bash
 npm install
 npm run dev
-Server runs at:
-http://localhost:5001
-🐳 Run with Docker (Recommended)
-Start the full system:
-docker compose up --build
-This starts:
-API → http://localhost:5001
-MongoDB
-Redis
-Stop containers:
-docker compose down
-🔐 API Endpoints
-Auth
-Signup
-POST /api/auth/signup
-Login
-POST /api/auth/login
-Tasks (Protected Routes)
-Require header:
-Authorization: Bearer <token>
-Get all tasks
-GET /api/tasks
-Create task
-POST /api/tasks
-Update task
-PUT /api/tasks/:id
-Delete task
-DELETE /api/tasks/:id
-⚡ Redis Caching Strategy
-Tasks are cached per user
-Cache key → tasks:<userId>
-Cache invalidated on:
-Task creation
-Task update
-Task deletion
-🧠 MongoDB Indexing
-Indexes applied on:
-owner
-status
-for efficient querying.
-🧪 Running Tests
-npm run test
-npm run test:coverage
-📊 Test Coverage
-Current backend test coverage: ~75%
-🛡 Security
-Password hashing with bcrypt
-JWT-based authentication
-Protected routes with middleware
-Environment-based secrets
-✨ Developer Workflow
-Local development
-npm run dev
-Full Docker environment
-docker compose up
-📌 Future Improvements
-Task filtering (status / due date)
-Refresh tokens
-Rate limiting
-CI pipeline for automated testing
-👩‍💻 Author
-Kamini Chanchal
-📄 Sample .env.example
-Create a file named .env.example in the root:
+```
+
+---
+
+## Environment variables
+
+Create a `.env` file (see `.env.example`):
+
+```
 PORT=5001
 MONGO_URI=mongodb://mongo:27017/tasks
 REDIS_URL=redis://redis:6379
 JWT_SECRET=your_jwt_secret
+```
+
+---
+
+## API
+
+### Auth
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Create an account |
+| POST | `/api/auth/login` | Get a JWT token |
+
+### Tasks
+
+All task routes require `Authorization: Bearer <token>`.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/tasks` | List your tasks (cached) |
+| POST | `/api/tasks` | Create a task |
+| PUT | `/api/tasks/:id` | Update a task |
+| DELETE | `/api/tasks/:id` | Delete a task |
+
+---
+
+## Caching
+
+Tasks are cached in Redis under `tasks:<userId>`. The cache gets cleared whenever you create, update, or delete a task — nothing fancy, just enough to avoid hitting the DB on every GET.
+
+---
+
+## Testing
+
+```bash
+npm run test
+npm run test:coverage
+```
+
+Coverage is around 75%. Tests run against `mongodb-memory-server` so no real DB needed.
+
+---
+
+## A few things I'd add next
+
+- Task filtering by status or due date
+- Refresh tokens
+- Rate limiting
+- CI pipeline
+
+---
+
+## Author
+
+Kamini Chanchal
