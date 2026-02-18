@@ -1,6 +1,6 @@
 # mini-task-tracker-api
 
-A backend for a personal task tracker, built to get hands-on with a production-style stack. It's not trying to be a massive project — the goal was to wire together auth, a real database, caching, and tests in a way that actually makes sense together.
+A backend for a personal task tracker, built to get hands-on with a production-style stack. It's not trying to be a massive project,the goal was to wire together auth, a real database, caching, and tests in a way that actually makes sense together.
 
 
 
